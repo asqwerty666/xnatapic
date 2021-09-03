@@ -1,1 +1,68 @@
-/nas/usr/local/bin/xnatapic
+#!/bin/bash
+export XNATAPIC_APPS="$(dirname ${BASH_SOURCE[0]})/../share/xnatapic"
+export XNATAPIC_HOME_APPS=$HOME/.xnatapic
+
+ARGS=( "$@" )
+APP_ARGS=()
+HELP="xnatapic - call XNat procedures from the command line"
+
+PROG=""
+
+case "${ARGS[0]}" in
+--help-short)
+	echo "$HELP"
+	;;
+--help) 
+	echo "$HELP"
+	for p in "$XNATAPIC_APPS"/*.sh ; do
+		if [ -x "$p" ] ; then
+			printf " * "
+			"$p" --help-short
+		fi
+	done
+	for p in "$XNATAPIC_HOME_APPS"/*.sh ; do
+		if [ -x "$p" ] ; then
+			printf " * "
+			"$p" --help-short
+		fi
+	done
+	;;
+--config)
+	if [ -s "$XNATAPIC_APPS/xnat.conf" ] ; then
+		echo "$XNATAPIC_APPS/xnat.conf:"
+		cat "$XNATAPIC_APPS/xnat.conf"
+	fi
+	if [ -s "$XNATAPIC_HOME_APPS/xnat.conf" ] ; then
+		echo "$XNATAPIC_HOME_APPS/xnat.conf"
+		cat "$XNATAPIC_HOME_APPS/xnat.conf"
+	fi
+	;;
+-*)
+	echo "Error: invalid option" >&2
+	exit 1
+	;;
+*)
+	PROG="$1"
+	;;
+esac
+
+m=0
+for ((n=1; n<${#ARGS[@]}; n++)) ; do
+	APP_ARGS[m]="${ARGS[$n]}"
+	let m=m+1
+done
+
+if ! [ -z "$PROG" ] ; then
+	if [ -x "$XNATAPIC_HOME_APPS/$PROG.sh" ] ; then
+		exec $XNATAPIC_HOME_APPS/$PROG.sh "${APP_ARGS[@]}"
+	else
+		if [ -x "$XNATAPIC_APPS/$PROG.sh" ] ; then
+			exec $XNATAPIC_APPS/$PROG.sh "${APP_ARGS[@]}"
+		else
+			echo "Error: wrong instruction $PROG" >&2
+			exit 1
+		fi
+	fi
+else
+	exit 1
+fi
