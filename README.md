@@ -16,7 +16,7 @@ xnatapic stands for XNAT API Client. Fancy isn't it? It groups a set of API call
 
 Just copy the main bash script (bin/xnatapic) to a place where it can be found and executed (/usr/local/bin/ ?) and the operational scripts (share/\*.sh) to a place where they can be found by the main script (/usr/local/share/xnatapic/ ?).
 
-Now you should configure the user access. Copy the file _share/xnat.conf_ to _$HOME/.xnatapic/xnat.conf_ edit it and change URL, user and password for your XNAT user data.
+Now you should configure the user access. Copy the file _share/xnat.conf_ to _$HOME/.xnatapic/xnat.conf_, edit it and change _URL_, _user_ and _password_ for your XNAT user data.
 
 ## Extending it
 
