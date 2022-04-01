@@ -12,6 +12,7 @@ PROJ_ID=""
 SUBJECT_ID=""
 EXPERIMENT_ID=""
 SESSION_ID=""
+JSESSION_ID=""
 
 #parse arguments
 for ((n=0; n<${#ARGS[@]}; n++)) ; do
@@ -35,12 +36,13 @@ for ((n=0; n<${#ARGS[@]}; n++)) ; do
  --label
  --project-name
  --type
+ --session
 .EOF
 		exit 0
 		;;
 	--version)
 		echo "xnatapic list_experiments"
-		echo "v20201216"
+		echo "v20220401"
 		exit 0;
 		;;
 	--project_id)
@@ -64,19 +66,28 @@ for ((n=0; n<${#ARGS[@]}; n++)) ; do
 		MODALITY="${ARGS[$n]}"
 		;;
 	--date)
+		let n=n+1
 		SHOW_DATE="${ARGS[$n]}"
 		;;
 	--date-insertion)
+		let n=n+1
 		SHOW_DATE_INS="${ARGS[$n]}"
 		;;
 	--label)
+		let n=n+1
 		SHOW_LABEL="${ARGS[$n]}"
 		;;
 	--project-name)
+		let n=n+1
 		SHOW_PROJ_NAME="${ARGS[$n]}"
 		;;	
 	--type)
+		let n=n+1
 		SHOW_TYPE="${ARGS[$n]}"
+		;;
+	--session)
+		let n=n+1
+		JSESSION_ID="${ARGS[$n]}"
 		;;
 	-*)
 		echo "Warning: ignoring option or command ${ARGS[$n]}" >&2
@@ -100,8 +111,15 @@ esac
 
 #run
 TMP_RESULTS=$(mktemp)
-
-if curl -f -X GET -u "$USER:$PASSWORD" "$HOST/data$PROJ_ID$SUBJECT_ID/experiments$EXPERIMENT_ID?format=json$DATE_RANGE$MODALITY" 2>/dev/null >$TMP_RESULTS ; then
+TRAP="";
+if [ -z "$JSESSION_ID" ] 
+then
+	if curl -f -X GET -u "$USER:$PASSWORD" "$HOST/data$PROJ_ID$SUBJECT_ID/experiments$EXPERIMENT_ID?format=json$DATE_RANGE$MODALITY" 2>/dev/null >$TMP_RESULTS; then TRAP="OK"; fi
+else
+	if curl -f -X GET -b "JSESSIONID=$JSESSION_ID" "$HOST/data$PROJ_ID$SUBJECT_ID/experiments$EXPERIMENT_ID?format=json$DATE_RANGE$MODALITY" 2>/dev/null >$TMP_RESULTS; then TRAP="OK"; fi
+fi
+if [ ! -z "$TRAP" ] 
+then
 	EID=""
 	EDT=""
 	EDTI=""
@@ -144,7 +162,6 @@ if curl -f -X GET -u "$USER:$PASSWORD" "$HOST/data$PROJ_ID$SUBJECT_ID/experiment
 			;;
 		esac
 	done
-
 else
 #error
 	echo "Error: retrieving info from server" >&2
