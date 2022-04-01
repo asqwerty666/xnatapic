@@ -12,7 +12,6 @@ PROJ_ID=""
 SUBJECT_ID=""
 EXPERIMENT_ID=""
 SESSION_ID=""
-JSESSION_ID=""
 
 #parse arguments
 for ((n=0; n<${#ARGS[@]}; n++)) ; do
@@ -36,13 +35,12 @@ for ((n=0; n<${#ARGS[@]}; n++)) ; do
  --label
  --project-name
  --type
- --session
 .EOF
 		exit 0
 		;;
 	--version)
 		echo "xnatapic list_experiments"
-		echo "v20220401"
+		echo "v20201216"
 		exit 0;
 		;;
 	--project_id)
@@ -85,10 +83,6 @@ for ((n=0; n<${#ARGS[@]}; n++)) ; do
 		let n=n+1
 		SHOW_TYPE="${ARGS[$n]}"
 		;;
-	--session)
-		let n=n+1
-		JSESSION_ID="${ARGS[$n]}"
-		;;
 	-*)
 		echo "Warning: ignoring option or command ${ARGS[$n]}" >&2
 		;;
@@ -111,15 +105,8 @@ esac
 
 #run
 TMP_RESULTS=$(mktemp)
-TRAP="";
-if [ -z "$JSESSION_ID" ] 
-then
-	if curl -f -X GET -u "$USER:$PASSWORD" "$HOST/data$PROJ_ID$SUBJECT_ID/experiments$EXPERIMENT_ID?format=json$DATE_RANGE$MODALITY" 2>/dev/null >$TMP_RESULTS; then TRAP="OK"; fi
-else
-	if curl -f -X GET -b "JSESSIONID=$JSESSION_ID" "$HOST/data$PROJ_ID$SUBJECT_ID/experiments$EXPERIMENT_ID?format=json$DATE_RANGE$MODALITY" 2>/dev/null >$TMP_RESULTS; then TRAP="OK"; fi
-fi
-if [ ! -z "$TRAP" ] 
-then
+
+if curl -f -X GET -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data$PROJ_ID$SUBJECT_ID/experiments$EXPERIMENT_ID?format=json$DATE_RANGE$MODALITY" 2>/dev/null >$TMP_RESULTS ; then
 	EID=""
 	EDT=""
 	EDTI=""

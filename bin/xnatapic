@@ -52,6 +52,14 @@ for ((n=1; n<${#ARGS[@]}; n++)) ; do
 	let m=m+1
 done
 
+#host, session, etc.
+[ -s "$XNATAPIC_APPS/xnat.conf" ] && . "$XNATAPIC_APPS/xnat.conf"
+[ -s "$XNATAPIC_HOME_APPS/xnat.conf" ] && . "$XNATAPIC_HOME_APPS/xnat.conf"
+if [ -z "$XNAT_JSESSIONID" ] ; then
+  [ -s "$XNATAPIC_HOME_APPS/xnat_user.conf" ] && . "$XNATAPIC_HOME_APPS/xnat_user.conf"
+  export XNAT_JSESSIONID=$(curl -f -u "$USER:$PASSWORD" -X POST "$HOST/data/JSESSION" 2>/dev/null )  
+fi
+
 if ! [ -z "$PROG" ] ; then
 	if [ -x "$XNATAPIC_HOME_APPS/$PROG.sh" ] ; then
 		exec $XNATAPIC_HOME_APPS/$PROG.sh "${APP_ARGS[@]}"
@@ -66,3 +74,4 @@ if ! [ -z "$PROG" ] ; then
 else
 	exit 1
 fi
+
