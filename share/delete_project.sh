@@ -41,7 +41,7 @@ done
 #checks
 
 #run
-if curl -f -X DELETE -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID" 2>/dev/null ; then
+if curl -f -X DELETE -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID" 2>/dev/null ; then
 	echo "Project $PROJ_ID deleted from server" >&2
 else
 	echo "Error: invalid response from server" >&2

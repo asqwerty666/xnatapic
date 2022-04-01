@@ -179,10 +179,10 @@ fi
 	if [ -z "$SCAN_ID" ] ; then
 		if [ "$nNIFTI_FILES" -gt 0 ] ; then
 			#pwd
-			#echo "curl -f -X GET -u $USER:$PASSWORD $HOST/data/$DEST/scans/?format=csv -o .scans.txt"
-			curl -f -X GET -u "$USER:$PASSWORD" "$HOST/data/$DEST/scans/?format=csv" -o .scans.txt >/dev/null 2>/dev/null
+			#echo "curl -f -X GET -b JSESSIONID=$XNAT_JSESSIONID $HOST/data/$DEST/scans/?format=csv -o .scans.txt"
+			curl -f -X GET -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/$DEST/scans/?format=csv" -o .scans.txt >/dev/null 2>/dev/null
 		else
-			curl -f -X GET -u "$USER:$PASSWORD" "$HOST/data/$DEST/scans/?format=csv" -o .scans.txt /dev/null 2>/dev/null
+			curl -f -X GET -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/$DEST/scans/?format=csv" -o .scans.txt /dev/null 2>/dev/null
 		fi
 	fi
 
@@ -214,9 +214,9 @@ fi
 			fi
 			
 			if [ -z "$S" ] && ! [ -z "$SCAN_ID" ] && ! [ -z "$TYPE" ] ; then
-				echo "curl -f -X PUT -u $USER:$PASSWORD $HOST/data/$DEST/scans/$S?xsiType=$TYPE"
+				echo "curl -f -X PUT -b JSESSIONID=$XNAT_JSESSIONID $HOST/data/$DEST/scans/$S?xsiType=$TYPE"
 				S="$SCAN_ID"
-				if ! curl -f -X PUT -u "$USER:$PASSWORD" "$HOST/data/$DEST/scans/$S?xsiType=$TYPE" >/dev/null 2>/dev/null ; then
+				if ! curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/$DEST/scans/$S?xsiType=$TYPE" >/dev/null 2>/dev/null ; then
 					echo "Warning: cannot initialize new session without a session type" >&2
 					continue
 				fi
@@ -225,15 +225,15 @@ fi
 			case "$fb" in
 			*.nii|*.NII|*.nii.gz|*.NII.gz|*.NII.GZ)
 				echo "$fb"
-				echo "curl -f -X PUT -u $USER:$PASSWORD -F file=@$f $HOST/data/$DEST/scans/$S/resources/NIFTI/files/$fb?overwrite=true&inbody=false&format=NIFTI&content=NIFTI_RAW"
-				curl -f -X PUT -u "$USER:$PASSWORD" -F "file=@$f" "$HOST/data/$DEST/scans/$S/resources/NIFTI/files/$fb?overwrite=true&inbody=false&format=NIFTI&content=NIFTI_RAW" >/dev/null 2>/dev/null || (
+				echo "curl -f -X PUT -b JSESSIONID=$XNAT_JSESSIONID -F file=@$f $HOST/data/$DEST/scans/$S/resources/NIFTI/files/$fb?overwrite=true&inbody=false&format=NIFTI&content=NIFTI_RAW"
+				curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" -F "file=@$f" "$HOST/data/$DEST/scans/$S/resources/NIFTI/files/$fb?overwrite=true&inbody=false&format=NIFTI&content=NIFTI_RAW" >/dev/null 2>/dev/null || (
 					echo "Error: could not upload $f" >&2
 					[ "$nNIFTI_FILES" == 0 ] && touch ".error"
 				)
 			;;
 			*.json|*.JSON)
-				#echo "curl -f -X PUT -u $USER:$PASSWORD -F file=@$f $HOST/data/$DEST/scans/$S/resources/NIFTI/files/$fb?overwrite=true&inbody=false&format=NIFTI&content=NIFTI_RAW"
-				curl -f -X PUT -u "$USER:$PASSWORD" -F "file=@$f" "$HOST/data/$DEST/scans/$S/resources/NIFTI/files/$fb?overwrite=true&inbody=false&format=JSON&content=NIFTI_JSON" >/dev/null 2>/dev/null || (
+				#echo "curl -f -X PUT -b JSESSIONID=$XNAT_JSESSIONID -F file=@$f $HOST/data/$DEST/scans/$S/resources/NIFTI/files/$fb?overwrite=true&inbody=false&format=NIFTI&content=NIFTI_RAW"
+				curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" -F "file=@$f" "$HOST/data/$DEST/scans/$S/resources/NIFTI/files/$fb?overwrite=true&inbody=false&format=JSON&content=NIFTI_JSON" >/dev/null 2>/dev/null || (
 					echo "Error: could not upload $f" >&2
 					[ "$nNIFTI_FILES" == 0 ] && touch ".error"
 				)

@@ -52,7 +52,7 @@ fi
 
 
 #run
-if ! curl -f -X POST -u "$USER:$PASSWORD" "$HOST/app/action/ManagePipeline" \
+if ! curl -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/app/action/ManagePipeline" \
 	-F "eventSubmit_doAdd=Add" \
 	-F "pipe:pipelineDetails.path=$PIPELINE" >/dev/null 2>/dev/null ; then
 	

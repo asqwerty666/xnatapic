@@ -96,15 +96,15 @@ if ! [ -z "$AGE" ] ; then
 fi
 
 #run
-#echo curl -f -X PUT -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/subjects/$SBJ?$U$LABEL$GENDER$HANDEDNESS$YOB"
+#echo curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/subjects/$SBJ?$U$LABEL$GENDER$HANDEDNESS$YOB"
 if [ -z "$PROJ_ID" ] ; then
-	if ! curl -f -X PUT -u "$USER:$PASSWORD" "$HOST/data/subjects/$SBJ?$U$LABEL$GENDER$HANDEDNESS$YOB" >/dev/null 2>/dev/null ; then
+	if ! curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/subjects/$SBJ?$U$LABEL$GENDER$HANDEDNESS$YOB" >/dev/null 2>/dev/null ; then
 		echo "Error: server error" >&2
 		exit 1
 	fi
 else
-	if ! curl -f -X PUT -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/subjects/$SBJ?$U$LABEL$GENDER$HANDEDNESS$YOB" >/dev/null 2>/dev/null ; then
-		echo curl -f -X PUT -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/subjects/$SBJ?$U$LABEL$GENDER$HANDEDNESS$YOB"
+	if ! curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/subjects/$SBJ?$U$LABEL$GENDER$HANDEDNESS$YOB" >/dev/null 2>/dev/null ; then
+		echo curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/subjects/$SBJ?$U$LABEL$GENDER$HANDEDNESS$YOB"
 		echo "Error: server error" >&2
 		exit 1
 	fi

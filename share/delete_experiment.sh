@@ -57,8 +57,8 @@ if [ -z "$PROJ_ID" ] || [ -z "$SUBJECT_ID" ] || [ -z "$EXPERIMENT_ID" ] ; then
 fi
 
 #run
-echo curl -f -X DELETE -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/subjects/$SUBJECT_ID/experiments/$EXPERIMENT_ID"
-if ! curl -f -X DELETE -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/subjects/$SUBJECT_ID/experiments/$EXPERIMENT_ID" 2>/dev/null >/dev/null ; then
+echo curl -f -X DELETE -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/subjects/$SUBJECT_ID/experiments/$EXPERIMENT_ID"
+if ! curl -f -X DELETE -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/subjects/$SUBJECT_ID/experiments/$EXPERIMENT_ID" 2>/dev/null >/dev/null ; then
 	echo "Error: server reported an error" >&2 
 	exit 1
 fi

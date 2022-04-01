@@ -52,7 +52,7 @@ fi
 
 
 #run
-if ! curl -f -X POST -u "$USER:$PASSWORD" "$HOST/app/action/ManagePipeline" \
+if ! curl -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/app/action/ManagePipeline" \
 	-F "eventSubmit_doDelete=Delete" -F "task=DELETE" \
 	-F "search_field=pipe:pipelinedetails.path" \
 	-F "search_value=$PIPELINE" >/dev/null 2>/dev/null ; then

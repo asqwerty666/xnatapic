@@ -92,12 +92,12 @@ if ! [ -z "$PROJ_KEYS" ] ; then
 fi
 
 #run
-if ! curl -f -X PUT -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID?u=u$PROJ_NAME$PROJ_DESC$PROJ_PI$PROJ_KEYS" ; then
+if ! curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID?u=u$PROJ_NAME$PROJ_DESC$PROJ_PI$PROJ_KEYS" ; then
 	echo "Error: server reported an error" >&2
 	exit 1
 fi
 if ! [ -z "$PROJ_ACCESS" ] ; then
-	if ! curl -f -X PUT -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/accessibility/$PROJ_ACCESS" ; then
+	if ! curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/accessibility/$PROJ_ACCESS" ; then
 		echo "Error: server reported an error while changing accessibility" >&2
 		exit 1
 	fi

@@ -65,7 +65,7 @@ fi
 #run
 TMP_RESULTS=$(mktemp)
 
-if curl -X GET -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines?format=json$SHOW_AVAILABLE" -o $TMP_RESULTS 2>/dev/null ; then
+if curl -X GET -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/pipelines?format=json$SHOW_AVAILABLE" -o $TMP_RESULTS 2>/dev/null ; then
 	PTH=""
 	PNM=""
 	PDS=""

@@ -68,12 +68,12 @@ fi
 
 #run
 if [ -z "$PROJ_ID" ] ; then
-	if ! curl -f -X DELETE -u "$USER:$PASSWORD" "$HOST/data/subjects/$SBJ" >/dev/null 2>/dev/null ; then
+	if ! curl -f -X DELETE -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/subjects/$SBJ" >/dev/null 2>/dev/null ; then
 		echo "Error: invalid request" >&2
 		exit 1
 	fi
 else
-	if ! curl -f -X DELETE -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/subjects/$SBJ" >/dev/null 2>/dev/null ; then
+	if ! curl -f -X DELETE -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/subjects/$SBJ" >/dev/null 2>/dev/null ; then
 		echo "Error: invalid request" >&2
 		exit 1
 	fi

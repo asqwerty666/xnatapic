@@ -55,7 +55,7 @@ fi
 #run
 TMP_RESULTS=$(mktemp)
 
-if curl -f -X GET -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE" 2>/dev/null >$TMP_RESULTS ; then
+if curl -f -X GET -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE" 2>/dev/null >$TMP_RESULTS ; then
 	PAT=""
 	PTH=""
 	
@@ -83,7 +83,7 @@ if curl -f -X GET -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines/$
 		esac
 		
 		if ! [ -z "$PTH" ] && ! [ -z "$PAT" ] ; then
-			if curl -f -X DELETE -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines?path=$PTH&datatype=$PAT" 2>/dev/null >/dev/null ; then
+			if curl -f -X DELETE -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/pipelines?path=$PTH&datatype=$PAT" 2>/dev/null >/dev/null ; then
 				break
 			else
 				echo "Error: could not delete pipeline at $PTH" >&2

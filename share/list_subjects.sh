@@ -58,7 +58,7 @@ fi
 #run
 TMP_RESULTS=$(mktemp)
 
-if curl -X GET -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJECT_ID/subjects?format=json" -o $TMP_RESULTS 2>/dev/null ; then
+if curl -X GET -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJECT_ID/subjects?format=json" -o $TMP_RESULTS 2>/dev/null ; then
 	cat $TMP_RESULTS | sed 's/\[\|\]\|{\|}\|,/\n/g' | sed 's/^ *\|\ *$\|"//g' |\
 	grep '^\(ID\|label\|URI\):.\+$' |\
 	while read s ; do

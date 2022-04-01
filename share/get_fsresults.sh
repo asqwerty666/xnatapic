@@ -108,7 +108,7 @@ fi
 #list resources
 TMP_FILE_LIST=$(mktemp)
 
-curl -X GET -u $USER:$PASSWORD "$HOST$URIpath/files?format=json" 2>/dev/null | sed 's/\[{\|,{\|}/\n/g' | grep '^"file_content"' |\
+curl -X GET -b JSESSIONID=$XNAT_JSESSIONID "$HOST$URIpath/files?format=json" 2>/dev/null | sed 's/\[{\|,{\|}/\n/g' | grep '^"file_content"' |\
 while read r ; do
 	v=()
 	echo "$r" | sed 's/","/"\n"/g' | (
@@ -145,7 +145,7 @@ for ((n=0; n<${#WHATlist[@]}; n++)) ; do
 	if URI="$(grep -F "/${WHATlist[$n]}" $TMP_FILE_LIST | head -n 1)" ; then
 	(
 		cd "$DESTINATION"
-		curl -X GET -u $USER:$PASSWORD "$HOST$URI" -o "$(basename "$URI")" 2>/dev/null
+		curl -X GET -b JSESSIONID=$XNAT_JSESSIONID "$HOST$URI" -o "$(basename "$URI")" 2>/dev/null
 	)
 	else
 		echo "Warning: resource ${WHATlist[$n]} not found in experiment $EXPERIMENT_ID"

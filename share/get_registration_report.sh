@@ -63,8 +63,8 @@ else
 	echo "DCM_SUBJECT,SUBJECT_ID,PET_EXPERIMENT_ID,MRI_EXPERIMENT_ID,REGISTRATION_QA,STATISTICS_SURV,STATISTICS_CL,QA_URI" > "$OUTPUT"
 fi
 
-echo "curl -f -X GET -u $USER:$PASSWORD $HOST$URIpath/?format=csv&modality=petSessionData"
-curl -f -X GET -u "$USER:$PASSWORD" "$HOST$URIpath/?format=csv&modality=petSessionData" 2>/dev/null |\
+echo "curl -f -X GET -b JSESSIONID=$XNAT_JSESSIONID $HOST$URIpath/?format=csv&modality=petSessionData"
+curl -f -X GET -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST$URIpath/?format=csv&modality=petSessionData" 2>/dev/null |\
 grep 'xnat:petSessionData' |\
 cut -d, -f 2 |\
 while read PET_EXPERIMENT_ID ; do
@@ -77,7 +77,7 @@ while read PET_EXPERIMENT_ID ; do
 	STATISTICS_SURV=""
 	STATISTICS_CL=""
 
-	curl -f -X GET -u $USER:$PASSWORD "$HOST$URIpath/?format=json" 2>/dev/null |\
+	curl -f -X GET -b JSESSIONID=$XNAT_JSESSIONID "$HOST$URIpath/?format=json" 2>/dev/null |\
 	sed 's/\[{\|,{\|}\|,/\n/g' | grep '^"[a-zA-Z_]\+":' | (
 		while read kv ; do
 			k="$(echo "$kv" | sed 's/\s*:.*$//' | sed 's/"//g')"
@@ -99,7 +99,7 @@ while read PET_EXPERIMENT_ID ; do
 		printf '"%s","%s","%s",' "$DCM_SUBJECT_ID" "$SUBJECT_ID" "$PET_EXPERIMENT_ID"
 	)
 	
-	curl -f -X GET -u $USER:$PASSWORD "$HOST$URIpath/resources/MRI/files/mriSessionMatch.json" 2>/dev/null |\
+	curl -f -X GET -b JSESSIONID=$XNAT_JSESSIONID "$HOST$URIpath/resources/MRI/files/mriSessionMatch.json" 2>/dev/null |\
 	sed 's/\[{\|,{\|}\|,/\n/g' | grep '^"[a-zA-Z_]\+":' | (
 		while read kv ; do
 			k="$(echo "$kv" | sed 's/\s*:.*$//' | sed 's/"//g')"

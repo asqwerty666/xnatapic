@@ -92,7 +92,7 @@ fi
 [ -z "$LABEL" ] || LABEL="&label=$LABEL"
 [ -z "$MODALITY" ] || MODALITY="&modality=$MODALITY"
 
-if ! curl -f -X PUT -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/subjects/$SUBJECT_ID/experiments/$EXPERIMENT_ID/?$TYPE$DATE$LABEL$MODALITY" 2>/dev/null >/dev/null ; then
+if ! curl -f -X PUT -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/subjects/$SUBJECT_ID/experiments/$EXPERIMENT_ID/?$TYPE$DATE$LABEL$MODALITY" 2>/dev/null >/dev/null ; then
 	echo "Error: server reported an error" >&2 
 	exit 1
 fi

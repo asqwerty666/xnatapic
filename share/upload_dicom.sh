@@ -148,9 +148,9 @@ if [ ${#DICOM_DIR[@]} -gt 0 ] ; then
 				exit 1
 			fi
 
-			echo curl $PROGRESS -f -X POST -u "$USER:$PASSWORD" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.tar.gz="@$TMP_ZIP"
+			echo curl $PROGRESS -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.tar.gz="@$TMP_ZIP"
 			[ -z "$PROGRESS" ] || echo "Uploading $(basename $f) ..." >&2
-			curl -f -X POST -u "$USER:$PASSWORD" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.tar.gz="@$TMP_ZIP" >/dev/null 2>/dev/null ||\
+			curl -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.tar.gz="@$TMP_ZIP" >/dev/null 2>/dev/null ||\
 			if [ "${#DICOM_DIR[@]}" -gt 1 ] ; then
 				echo "Warning: could not upload $f" >&2
 				let ERR=$ERR+1
@@ -177,9 +177,9 @@ if [ ${#DICOM_DIR[@]} -gt 0 ] ; then
 					exit 1
 				fi
 
-				echo curl $PROGRESS -f -X POST -u "$USER:$PASSWORD" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.tar.gz="@$TMP_ZIP"
+				echo curl $PROGRESS -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.tar.gz="@$TMP_ZIP"
 				[ -z "$PROGRESS" ] || echo "Uploading $s ..." >&2
-				curl $PROGRESS -f -X POST -u "$USER:$PASSWORD" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.tar.gz="@$TMP_ZIP" >/dev/null 2>/dev/null ||\
+				curl $PROGRESS -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.tar.gz="@$TMP_ZIP" >/dev/null 2>/dev/null ||\
 				if [ "${#DICOM_DIR[@]}" -gt 1 ] ; then
 					echo "Warning: could not upload series $s in $f" >&2
 					let ERR=$ERR+1
@@ -203,9 +203,9 @@ fi
 if [ ${#DICOM_ZIP[@]} -gt 0 ] ; then
 
 	for ZIP in ${DICOM_ZIP[@]} ; do
-		echo curl $PROGRESS -f -X POST -u "$USER:$PASSWORD" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.zip="@$ZIP"
+		echo curl $PROGRESS -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.zip="@$ZIP"
 		[ -z "$PROGRESS" ] || echo "Uploading $ZIP ..." >&2
-		curl $PROGRESS -f -X POST -u "$USER:$PASSWORD" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.zip="@$ZIP" >/dev/null 2>/dev/null ||	 if [ ${#DICOM_ZIP[@]} -gt 1 ] ; then
+		curl $PROGRESS -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/services/import?import-handler=SI$DEST$OVWR$PIP" -F file.zip="@$ZIP" >/dev/null 2>/dev/null ||	 if [ ${#DICOM_ZIP[@]} -gt 1 ] ; then
 			echo "Warning: could not upload zip series $ZIP" >&2
 			let ERR=$ERR+1
 		else

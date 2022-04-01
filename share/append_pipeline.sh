@@ -55,7 +55,7 @@ fi
 #run
 TMP_RESULTS=$(mktemp)
 
-if curl -X GET -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines?format=json&additional=true" -o $TMP_RESULTS 2>/dev/null ; then
+if curl -X GET -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/pipelines?format=json&additional=true" -o $TMP_RESULTS 2>/dev/null ; then
 	PTH=""
 	PNM=""
 	PDS=""
@@ -69,7 +69,7 @@ if curl -X GET -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines?form
 			Datatype)
 				if [ "$PNM" == "$PIPELINE.xml" ] ; then
 					#THIS IS NOT THE API: it's a hack based on the GUI
-					curl -f -X POST -u "$USER:$PASSWORD" "$HOST/app/action/ManagePipeline" \
+					curl -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/app/action/ManagePipeline" \
 						-F "schemaType=arc:project_descendant_pipeline" \
 						-F "eventSubmit_doAddprojectpipeline=Submit" \
 						-F "project=$PROJ_ID" -F "auto_archive=true" \

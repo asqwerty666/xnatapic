@@ -69,14 +69,14 @@ fi
 if [ "$EXPERIMENT" == "" ] || [ "$EXPERIMENT" == "ALL" ] ; then
 	TMP_RESULTS=$(mktemp)
 	ERRC=0
-	if curl -X GET -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/experiments?format=json&owner=true" -o $TMP_RESULTS 2>/dev/null ; then
+	if curl -X GET -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/experiments?format=json&owner=true" -o $TMP_RESULTS 2>/dev/null ; then
 		#cat $TMP_RESULTS
 		cat $TMP_RESULTS | sed 's/\[\|\]\|{\|}\|,/\n/g' | sed 's/^ *\|\ *$\|"//g' |\
 		grep '^.\+:.\+$' | sed 's/ *: */=/' |\
 		grep '^ID=' | sed 's/^ID=//' |\
 		while read EXP ; do
-			#echo curl -f -X POST -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE/experiments/$EXP$PIPE_ARGS" 
-			if ! curl -f -X POST -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE/experiments/$EXP$PIPE_ARGS" >/dev/null 2>/dev/null ; then
+			#echo curl -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE/experiments/$EXP$PIPE_ARGS" 
+			if ! curl -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE/experiments/$EXP$PIPE_ARGS" >/dev/null 2>/dev/null ; then
 				let ERRC=ERRC+1
 			fi
 		done
@@ -90,8 +90,8 @@ if [ "$EXPERIMENT" == "" ] || [ "$EXPERIMENT" == "ALL" ] ; then
 	fi
 	rm -f $TMP_RESULTS
 else
-	#echo curl -f -X POST -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE/experiments/$EXPERIMENT$PIPE_ARGS"
-	if ! curl -f -X POST -u "$USER:$PASSWORD" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE/experiments/$EXPERIMENT$PIPE_ARGS" >/dev/null 2>/dev/null ; then
+	#echo curl -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE/experiments/$EXPERIMENT$PIPE_ARGS"
+	if ! curl -f -X POST -b "JSESSIONID=$XNAT_JSESSIONID" "$HOST/data/projects/$PROJ_ID/pipelines/$PIPELINE/experiments/$EXPERIMENT$PIPE_ARGS" >/dev/null 2>/dev/null ; then
 		echo "Error: server reported an error" >&2
 		exit 1
 	fi
